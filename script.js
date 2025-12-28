@@ -25,45 +25,57 @@ async function fetchTemperature(location) {
 }
 
 function getCoordinates() {
-    navigator.geolocation.getCurrentPosition((position) => {
-        const latitude = position.coords.latitude
-        const longitude = position.coords.longitude
-
-        return `${latitude},${longitude}`
+    return new Promise((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                resolve(`${latitude},${longitude}`);
+            },
+            (error) => {
+                reject(error);
+            }
+        );
     });
 }
 
 function getLocation() {
     const inputElement = document.getElementById('textoBox');
     
-    // ** CORREÇÃO AQUI: Verifica se o elemento foi encontrado **
     if (inputElement) {
-        // Se o elemento existe, você pode ler as propriedades
         const locationValue = inputElement.value || inputElement.textContent;
         return locationValue.toLocaleLowerCase();
     } else {
-        // Se o elemento não existe (ID incorreto ou HTML ainda não carregado)
         console.error("Erro: Elemento com ID 'textBox' não encontrado no DOM.");
-        // Retorna uma string vazia para evitar que a busca na API ocorra
         return ""; 
     }
+}
+
+async function executeWeatherFlow(strategy) {
+   try {
+            let location;
+
+        if (strategy === "search") {
+            location = getLocation();
+        } else if (strategy === "current") {
+            location = await getCoordinates();
+        }
+
+        if (location) {
+            await fetchTemperature(location);
+        }
+   }catch(error) {
+        console.error("Erro no fluxo:", error);
+   }
 }
 
 const searchButton = document.getElementById('searchButton');
 const actualLocationButton = document.getElementById('actualLocationButton');
 
 searchButton.addEventListener('click', async () => {
-    const location = getLocation();
-    
-    if (location) {
-        await fetchTemperature(location);
-    }
+    executeWeatherFlow("search");
 });
 
 actualLocationButton.addEventListener('click', async() => {
-    const coordinates = getCoordinates
-
-    if(coordinates) {
-        await fetchTemperature(coordinates)
-    }
+     executeWeatherFlow("current");
 });
