@@ -1,5 +1,5 @@
 async function fetchTemperature(location) {
-    const url = `http://api.weatherapi.com/v1/current.json?key=d598968df95c40538cc213327251212&q=${location}`;
+    const url = `https://api.weatherapi.com/v1/current.json?key=d598968df95c40538cc213327251212&q=${location}`;
     const temperature = document.getElementById("temperature");
 
     fetch(url)
@@ -51,6 +51,15 @@ function getLocation() {
     }
 }
 
+async function getLocationByIp() {
+    try {
+        return await getCoordinates();
+    } catch (err) {
+        console.warn("Fallback para IP:", err);
+        return "auto:ip";
+    }
+}
+
 async function executeWeatherFlow(strategy) {
    try {
             let location;
@@ -58,7 +67,7 @@ async function executeWeatherFlow(strategy) {
         if (strategy === "search") {
             location = getLocation();
         } else if (strategy === "current") {
-            location = await getCoordinates();
+            location = await getLocationSmart();
         }
 
         if (location) {
