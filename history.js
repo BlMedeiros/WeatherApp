@@ -15,3 +15,4 @@ function getHistory() {
 
     let searchObject = JSON.parse(getSearchHistory)
 }
+
