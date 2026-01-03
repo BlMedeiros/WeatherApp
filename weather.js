@@ -16,6 +16,8 @@ async function fetchTemperature(location) {
             temperature.textContent = temperatureData;
 
             console.log(data)
+
+            addHistory(data.location.name)
         })
         .catch(error => console.log(error));
 
@@ -67,7 +69,7 @@ async function executeWeatherFlow(strategy) {
         if (strategy === "search") {
             location = getLocation();
         } else if (strategy === "current") {
-            location = await getLocationSmart();
+            location = await getLocationByIp();
         }
 
         if (location) {
