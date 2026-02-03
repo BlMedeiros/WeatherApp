@@ -1,6 +1,9 @@
 async function fetchTemperature(location) {
-    const url = `https://api.weatherapi.com/v1/current.json?key=d598968df95c40538cc213327251212&q=${location}&lang=pt`;
+    
+    const url = `https://api.weatherapi.com/v1/forecast.json?key=d598968df95c40538cc213327251212&q=${location}&days=3&lang=pt`;
     const temperature = document.getElementById("temperature");
+    const climate = document.getElementById("climate")
+    const image_icon = document.getElementById("icon")
 
     fetch(url)
         .then(response => {
@@ -11,9 +14,15 @@ async function fetchTemperature(location) {
 
         })
         .then(data => {
-            const temperatureData = data.current.temp_c;
-            
+            let temperatureData = data.current.temp_c;
+            let climateData = data.current.condition.text;
+            let imageSource = data.current.condition.icon;
+
             temperature.textContent = temperatureData;
+            climate.textContent = climateData;
+            image_icon.src = imageSource
+
+            getForecastData(data)
 
             console.log(data)
 
@@ -78,6 +87,22 @@ async function executeWeatherFlow(strategy) {
    }catch(error) {
         console.error("Erro no fluxo:", error);
    }
+}
+
+function getForecastData(data) {
+    const days = data.forecast.forecastday;
+
+    days.forEach((dayData, index) => {
+        const container = document.getElementById(`dia-${index + 1}`);
+        
+        if (container) {
+            const iconUrl = "https:" + dayData.day.condition.icon;
+            const avgTemp = dayData.day.avgtemp_c;
+
+            container.querySelector('img').src = iconUrl;
+            container.querySelector('p').innerText = `${Math.round(avgTemp)}°C`;
+        }
+    });
 }
 
 const searchButton = document.getElementById('searchButton');
