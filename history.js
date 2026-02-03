@@ -1,18 +1,20 @@
-search = {
-        city_name: name
-}
+    function addHistory(name) {
 
-function addHistory(name) {
+        let searchHistory = JSON.parse(localStorage.getItem("search") || "[]");
 
-    search.setItem(name)
-    
-    localStorage.setItem("search",JSON.stringify(search))
+        searchHistory = searchHistory.filter(item => item !== name);
 
-}
+        searchHistory.unshift(name)
+        
+        if(searchHistory.length > 5) {
+            searchHistory = searchHistory.slice(0, 5);
+        }
 
-function getHistory() {
-    let getSearchHistory = localStorage.getItem("search")
+        localStorage.setItem("search",JSON.stringify(searchHistory))
 
-    let searchObject = JSON.parse(getSearchHistory)
-}
+    }
+
+    function getHistory() {
+        return JSON.parse(localStorage.getItem("search") || "[]");
+    }
 

@@ -1,5 +1,5 @@
 async function fetchTemperature(location) {
-    const url = `https://api.weatherapi.com/v1/current.json?key=d598968df95c40538cc213327251212&q=${location}`;
+    const url = `https://api.weatherapi.com/v1/current.json?key=d598968df95c40538cc213327251212&q=${location}&lang=pt`;
     const temperature = document.getElementById("temperature");
 
     fetch(url)
