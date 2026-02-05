@@ -18,7 +18,7 @@ async function fetchTemperature(location) {
             let climateData = data.current.condition.text;
             let imageSource = data.current.condition.icon;
 
-            temperature.textContent = temperatureData;
+            temperature.innerText = `${Math.round(temperatureData)}°C`;
             climate.textContent = climateData;
             image_icon.src = imageSource
 
